@@ -10,6 +10,9 @@ import guru.springframework.sdjpa.repository.*;
 import org.springframework.boot.CommandLineRunner;
 //import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
+
 //@Profile({"local","default"})
 @Component
 public class Dataloader implements CommandLineRunner {
@@ -32,7 +35,7 @@ public class Dataloader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        /*Author a1 = new Author("Vishal","Dwarkunde");
+/*        Author a1 = new Author("Vishal","Dwarkunde");
         authorRepository.save(a1);
 
         Author a2= new Author("Tushar","Dwarkunde");
@@ -42,10 +45,10 @@ public class Dataloader implements CommandLineRunner {
         authorPKUUIDRepository.save(ap1);
 
         AuthorPKUUID ap2= new AuthorPKUUID("Tushar","Dwarkunde");
-        authorPKUUIDRepository.save(ap2);
+        authorPKUUIDRepository.save(ap2);*/
 
 
-        Book book1 = new Book("Domain Driven Design","123456 ","Macgill Publication ");
+        /*Book book1 = new Book("Domain Driven Design","123456 ","Macgill Publication ");
         bookRepository.save(book1);
 
         Book book2 = new Book("Spring in Action","123457","Orielly");
@@ -63,7 +66,10 @@ public class Dataloader implements CommandLineRunner {
         BookPKUUIDRFC4122 bu2 = new BookPKUUIDRFC4122("Spring in Action","123457","Orielly");
         bookPKUUIDRFC4122Repository.save(bu2);*/
 
-        Author author = authorDao.getById(103l);
-        System.out.println(author);
+       authorDao.save(new Author("Shivam","Dwarkunde"));
+        Set<Author> authors = authorDao.findAuthorByLastName("Dwarkunde");
+        for (Author a:authors) {
+            System.out.println(a);
+        }
     }
 }
