@@ -1,5 +1,6 @@
 package guru.springframework.sdjpa.boostrap;
 
+import guru.springframework.sdjpa.dao.AuthorDao;
 import guru.springframework.sdjpa.domain.Author;
 import guru.springframework.sdjpa.domain.Book;
 import guru.springframework.sdjpa.domain.primaryKey.AuthorPKUUID;
@@ -18,18 +19,20 @@ public class Dataloader implements CommandLineRunner {
     private final BookPKSequenceRepository bookPKSequenceRepository;
     private final AuthorPKUUIDRepository authorPKUUIDRepository;
     private final BookPKUUIDRFC4122Repository bookPKUUIDRFC4122Repository;
+    private final AuthorDao authorDao;
 
-    public Dataloader(BookRepository bookRepository, AuthorRepository authorRepository, BookPKSequenceRepository bookPKSequenceRepository, AuthorPKUUIDRepository authorPKUUIDRepository, BookPKUUIDRFC4122Repository bookPKUUIDRFC4122Repository) {
+    public Dataloader(BookRepository bookRepository, AuthorRepository authorRepository, BookPKSequenceRepository bookPKSequenceRepository, AuthorPKUUIDRepository authorPKUUIDRepository, BookPKUUIDRFC4122Repository bookPKUUIDRFC4122Repository, AuthorDao authorDao) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.bookPKSequenceRepository = bookPKSequenceRepository;
         this.authorPKUUIDRepository = authorPKUUIDRepository;
         this.bookPKUUIDRFC4122Repository = bookPKUUIDRFC4122Repository;
+        this.authorDao = authorDao;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        Author a1 = new Author("Vishal","Dwarkunde");
+        /*Author a1 = new Author("Vishal","Dwarkunde");
         authorRepository.save(a1);
 
         Author a2= new Author("Tushar","Dwarkunde");
@@ -58,8 +61,9 @@ public class Dataloader implements CommandLineRunner {
         bookPKUUIDRFC4122Repository.save(bu1);
 
         BookPKUUIDRFC4122 bu2 = new BookPKUUIDRFC4122("Spring in Action","123457","Orielly");
-        bookPKUUIDRFC4122Repository.save(bu2);
-        System.out.println(bu2.getId());
+        bookPKUUIDRFC4122Repository.save(bu2);*/
 
+        Author author = authorDao.getById(103l);
+        System.out.println(author);
     }
 }
