@@ -59,6 +59,7 @@ public class Dataloader implements CommandLineRunner {
 
         BookPKUUIDRFC4122 bu2 = new BookPKUUIDRFC4122("Spring in Action","123457","Orielly");
         bookPKUUIDRFC4122Repository.save(bu2);
+        System.out.println(bu2.getId());
 
     }
 }
