@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Component
@@ -88,21 +89,92 @@ public class AuthorDaoImpl implements AuthorDao{
 
     @Override
     public Author save(Author author) throws SQLException {
-        try {
+       if(author.getId()== null) {
+           try {
+               connection = dataSource.getConnection();
+               preparedStatement = connection.prepareStatement("insert into author (first_name, last_name) values (?,?)");
+               preparedStatement.setString(1, author.getFirstName());
+               preparedStatement.setString(2, author.getLastName());
+               preparedStatement.execute();
+
+               return null;
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }finally {
+                    closeAll();
+                }
+            }else{
+               try{
+                   Author foundAuthor = getById(author.getId());
+                   connection = dataSource.getConnection();
+                   if(author.getFirstName()==null){
+                       author.setFirstName(foundAuthor.getFirstName());
+                   }
+                   if(author.getLastName()==null){
+                       author.setLastName(foundAuthor.getLastName());
+                   }
+                   preparedStatement = connection.prepareStatement("update author set first_name = ?, last_name = ? where id = ?");
+                   preparedStatement.setString(1, author.getFirstName());
+                   preparedStatement.setString(2, author.getLastName());
+                   preparedStatement.setLong(3,author.getId());
+                   preparedStatement.execute();
+                   return null;
+
+               } catch (SQLException e) {
+                   e.printStackTrace();
+               }finally {
+                   closeAll();
+               }
+           }
+
+        return null;
+    }
+
+    @Override
+    public Set<Author> findAll() throws SQLException {
+        Set<Author> authors = new HashSet<>();
+        try{
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("insert into author (first_name, last_name) values (?,?)");
-            preparedStatement.setString(1,author.getFirstName());
-            preparedStatement.setString(2, author.getLastName());
-            preparedStatement.execute();
-
-            return null;
-
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("Select * from author");
+            while (resultSet.next()){
+                Author a = new Author();
+                a.setId(resultSet.getLong("id"));
+                a.setFirstName(resultSet.getString("first_name"));
+                a.setLastName(resultSet.getString("last_name"));
+                authors.add(a);
+            }
+            return authors;
         }catch (SQLException e){
             e.printStackTrace();
         }finally {
             closeAll();
         }
         return null;
+    }
+
+    @Override
+    public void deleteById(Long id) throws SQLException {
+        if(getById(id) != null) {
+            try {
+                connection = dataSource.getConnection();
+                preparedStatement = connection.prepareStatement("DELETE from author where id = ?");
+                preparedStatement.setLong(1,id);
+                preparedStatement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                closeAll();
+            }
+        }else {
+            throw new NoSuchElementException("Could not found User with ID");
+        }
+    }
+
+    @Override
+    public void deleteAuthor(Author author) throws SQLException {
+        deleteById(author.getId());
     }
 
     private void closeAll() throws SQLException {

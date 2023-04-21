@@ -66,9 +66,15 @@ public class Dataloader implements CommandLineRunner {
         BookPKUUIDRFC4122 bu2 = new BookPKUUIDRFC4122("Spring in Action","123457","Orielly");
         bookPKUUIDRFC4122Repository.save(bu2);*/
 
-       authorDao.save(new Author("Shivam","Dwarkunde"));
-        Set<Author> authors = authorDao.findAuthorByLastName("Dwarkunde");
+        Set<Author> authors = authorDao.findAll();
         for (Author a:authors) {
+            System.out.println(a);
+        }
+        authorDao.deleteById(205l);
+       //authorDao.save(new Author("Vishal","Dwarkunde"));
+        System.out.println("After Delete");
+        Set<Author> authors2 = authorDao.findAll();
+        for (Author a:authors2) {
             System.out.println(a);
         }
     }
